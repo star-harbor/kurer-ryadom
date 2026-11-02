@@ -128,8 +128,19 @@
       max: ['https://max.ru/se14822982_bot', 'start'],
       vk: ['https://vk.me/kurer_ryadom', 'ref']
     };
+    // Счётчик: сообщает сервису, что кандидат открыл страницу и нажал кнопку. Если сервис недоступен, кнопки работают как обычно.
+    var COUNTER = 'https://able-tiger-3860.a.tuna.free';
+    function hit(e, ch) {
+      if (!COUNTER || !c || !window.fetch) return;
+      try {
+        fetch(COUNTER + '/t?c=' + encodeURIComponent(c) + '&e=' + e + (ch ? '&ch=' + ch : ''), { method: 'POST', mode: 'cors', keepalive: true, headers: { 'tuna-skip-browser-warning': '1' } }).catch(function () {});
+      } catch (err) {}
+    }
+    hit('view');
     ['tg', 'max', 'vk'].forEach(function (k) {
-      document.getElementById('b-' + k).href = links[k][0] + (c ? '?' + links[k][1] + '=' + encodeURIComponent(c) : '');
+      var a = document.getElementById('b-' + k);
+      a.href = links[k][0] + (c ? '?' + links[k][1] + '=' + encodeURIComponent(c) : '');
+      a.addEventListener('click', function () { hit('click', k); });
     });
   })();
 </script>
